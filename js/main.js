@@ -19,31 +19,44 @@ Promise.all([
   allLapData = allData;
 
   d3.select("#driver-select").on("change", updateScene);
-  updateScene();
+  updateScene(); // initial render
 });
 
 function updateScene() {
   const selectedDriver = d3.select("#driver-select").property("value");
 
+  // Filter min lap data for that driver
   const driverMinLaps = minLapData.filter(d => d.driverName === selectedDriver);
 
+  if (driverMinLaps.length === 0) {
+    console.warn(`No data for ${selectedDriver}`);
+    return;
+  }
+
+  const circuits = driverMinLaps.map(d => d.circuitName);
+
   const x = d3.scalePoint()
-    .domain(driverMinLaps.map(d => d.circuitName))
+    .domain(circuits)
     .range([0, width])
     .padding(0.5);
 
   const y = d3.scaleLinear()
-    .domain([d3.min(driverMinLaps, d => d.time_ms) - 1000, d3.max(driverMinLaps, d => d.time_ms) + 1000])
+    .domain([
+      d3.min(driverMinLaps, d => d.time_ms) - 1000,
+      d3.max(driverMinLaps, d => d.time_ms) + 1000
+    ])
     .range([height, 0]);
 
   g1.selectAll("*").remove();
 
   // Axes
-  g1.append("g").attr("transform", `translate(0,${height})`).call(d3.axisBottom(x))
+  g1.append("g")
+    .attr("transform", `translate(0,${height})`)
+    .call(d3.axisBottom(x))
     .selectAll("text")
     .style("cursor", "pointer")
-    .on("click", (event, circuitName) => showLapPlot(selectedDriver, circuitName))
-    .on("mouseover", (event, circuitName) => showLapPlot(selectedDriver, circuitName));
+    .on("click", (_, circuit) => showLapPlot(selectedDriver, circuit))
+    .on("mouseover", (_, circuit) => showLapPlot(selectedDriver, circuit));
 
   g1.append("g").call(d3.axisLeft(y));
 
@@ -56,10 +69,10 @@ function updateScene() {
     .attr("cy", d => y(d.time_ms))
     .attr("r", 5)
     .attr("fill", "steelblue")
-    .on("click", (event, d) => showLapPlot(selectedDriver, d.circuitName))
-    .on("mouseover", (event, d) => showLapPlot(selectedDriver, d.circuitName));
+    .on("click", (_, d) => showLapPlot(selectedDriver, d.circuitName))
+    .on("mouseover", (_, d) => showLapPlot(selectedDriver, d.circuitName));
 
-  // Line (dashed)
+  // Connecting dashed line
   const line = d3.line()
     .x(d => x(d.circuitName))
     .y(d => y(d.time_ms));
@@ -68,11 +81,11 @@ function updateScene() {
     .datum(driverMinLaps)
     .attr("fill", "none")
     .attr("stroke", "steelblue")
-    .attr("stroke-width", 1.5)
     .attr("stroke-dasharray", "5,5")
+    .attr("stroke-width", 1.5)
     .attr("d", line);
 
-  // Hide lap plot until interaction
+  // Hide lap plot until user interacts
   lapPlotContainer.classed("hidden", true);
 }
 
