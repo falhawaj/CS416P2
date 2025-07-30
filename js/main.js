@@ -44,7 +44,7 @@ function updateScene() {
     .data(driverFastest)
     .enter()
     .append("rect")
-    .attr("x", d => x(d.circuit))
+    .attr("x", d => x(d.circuitName))
     .attr("y", d => y(d.fastestLap))
     .attr("width", x.bandwidth())
     .attr("height", d => height - y(d.fastestLap))
