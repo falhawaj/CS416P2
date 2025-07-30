@@ -1,1 +1,47 @@
-<h1>Hello!</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>2023 F1 Lap Time Analysis</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://unpkg.com/d3-annotation@2.5.1/dist/d3-annotation.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+</head>
+<body>
+  <section class="section">
+    <div class="container">
+      <h1 class="title">F1 Fastest Lap Times</h1>
+
+      <div class="field">
+        <label class="label">Select Driver</label>
+        <div class="control">
+          <div class="select">
+            <select id="driver-select">
+              <option value="Verstappen">Verstappen</option>
+              <option value="Perez">Perez</option>
+              <option value="Hamilton">Hamilton</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Select Circuit</label>
+        <div class="control">
+          <div class="select">
+            <select id="circuit-select"></select>
+          </div>
+        </div>
+      </div>
+
+      <h2 class="subtitle">Fastest Lap Time per Circuit</h2>
+      <svg id="circuit-plot" width="800" height="400"></svg>
+
+      <h2 class="subtitle">Lap Time vs Lap (for selected circuit)</h2>
+      <svg id="lap-plot" width="800" height="400"></svg>
+    </div>
+  </section>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
