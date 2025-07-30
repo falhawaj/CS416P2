@@ -1,2 +1,2 @@
-# CS417P2
+# CS416P2
 Data visualization project 2
