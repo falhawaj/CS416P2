@@ -1,4 +1,4 @@
-driverId,driverName,raceId,circuitName,lap,position,time,milliseconds
+driverId,driverName,raceId,circuitName,lap,position,time,fastestLap
 830,Max Verstappen,1098,Bahrain Grand Prix,1,1,01:39.0,99019
 830,Max Verstappen,1098,Bahrain Grand Prix,2,1,01:38.0,97974
 830,Max Verstappen,1098,Bahrain Grand Prix,3,1,01:38.0,98006
