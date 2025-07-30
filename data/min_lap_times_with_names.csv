@@ -1,4 +1,4 @@
-driverId,driverName,raceId,circuitName,lap,position,time,fastestLap
+driverId,driverName,raceId,circuitName,lap,position,time,time_ms
 1,Lewis Hamilton,1098,Bahrain Grand Prix,36,5,01:36.5,96546
 4,Fernando Alonso,1098,Bahrain Grand Prix,36,6,01:36.2,96156
 815,Sergio Pérez,1098,Bahrain Grand Prix,37,2,01:36.3,96344
