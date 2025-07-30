@@ -24,10 +24,10 @@ Promise.all([
 function updateScene() {
   const selectedDriver = d3.select("#driver-select").property("value");
   
-  const driverFastest = fastestLapData.filter(d => d.driver === selectedDriver);
+  const driverFastest = fastestLapData.filter(d => d.driverName === selectedDriver);
   
   const x = d3.scaleBand()
-    .domain(driverFastest.map(d => d.circuit))
+    .domain(driverFastest.map(d => d.circuitName))
     .range([0, width])
     .padding(0.1);
   
@@ -51,7 +51,7 @@ function updateScene() {
     .attr("fill", "steelblue")
     .style("cursor", "pointer")
     .on("click", (event, d) => {
-      showLapPlot(selectedDriver, d.circuit);
+      showLapPlot(selectedDriver, d.circuitName);
     });
   
   // Clear lap plot initially
