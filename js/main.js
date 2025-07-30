@@ -11,8 +11,8 @@ const g2 = svg2.append("g").attr("transform", `translate(${margin.left},${margin
 let fastestLapData, allLapData;
 
 Promise.all([
-  d3.csv("data/fastest_laps.csv", d3.autoType),
-  d3.csv("data/all_laps.csv", d3.autoType)
+  d3.csv("data/min_lap_times_with_names.csv", d3.autoType),
+  d3.csv("data/lap_times_with_names.csv", d3.autoType)
 ]).then(([fastest, all]) => {
   fastestLapData = fastest;
   allLapData = all;
