@@ -1,0 +1,88 @@
+driverId,driverName,raceId,circuitName,lap,position,time,fastest time (ms)
+1,Lewis Hamilton,1098,Bahrain Grand Prix,36,5,01:36.5,96546
+4,Fernando Alonso,1098,Bahrain Grand Prix,36,6,01:36.2,96156
+815,Sergio Pérez,1098,Bahrain Grand Prix,37,2,01:36.3,96344
+830,Max Verstappen,1098,Bahrain Grand Prix,44,1,01:36.2,96236
+1,Lewis Hamilton,1099,Saudi Arabian Grand Prix,47,5,01:32.9,92941
+4,Fernando Alonso,1099,Saudi Arabian Grand Prix,50,3,01:32.2,92240
+815,Sergio Pérez,1099,Saudi Arabian Grand Prix,38,1,01:32.2,92188
+830,Max Verstappen,1099,Saudi Arabian Grand Prix,50,2,01:31.9,91906
+1,Lewis Hamilton,1100,Australian Grand Prix,49,2,01:20.6,80613
+4,Fernando Alonso,1100,Australian Grand Prix,53,3,01:20.5,80476
+815,Sergio Pérez,1100,Australian Grand Prix,53,7,01:20.2,80235
+830,Max Verstappen,1100,Australian Grand Prix,49,1,01:20.3,80342
+1,Lewis Hamilton,1101,Azerbaijan Grand Prix,48,6,01:45.3,105346
+4,Fernando Alonso,1101,Azerbaijan Grand Prix,49,4,01:44.2,104241
+815,Sergio Pérez,1101,Azerbaijan Grand Prix,50,1,01:44.6,104589
+830,Max Verstappen,1101,Azerbaijan Grand Prix,51,2,01:44.2,104232
+1,Lewis Hamilton,1102,Miami Grand Prix,57,6,01:30.7,90669
+4,Fernando Alonso,1102,Miami Grand Prix,57,3,01:30.5,90519
+815,Sergio Pérez,1102,Miami Grand Prix,57,2,01:30.6,90560
+830,Max Verstappen,1102,Miami Grand Prix,56,1,01:29.7,89708
+1,Lewis Hamilton,1104,Monaco Grand Prix,33,8,01:15.7,75650
+4,Fernando Alonso,1104,Monaco Grand Prix,43,2,01:16.7,76674
+815,Sergio Pérez,1104,Monaco Grand Prix,5,18,01:16.3,76269
+830,Max Verstappen,1104,Monaco Grand Prix,23,1,01:16.6,76604
+1,Lewis Hamilton,1105,Spanish Grand Prix,62,2,01:16.7,76676
+4,Fernando Alonso,1105,Spanish Grand Prix,49,8,01:18.1,78083
+815,Sergio Pérez,1105,Spanish Grand Prix,52,5,01:16.7,76666
+830,Max Verstappen,1105,Spanish Grand Prix,61,1,01:16.3,76330
+1,Lewis Hamilton,1106,Canadian Grand Prix,47,3,01:15.4,75396
+4,Fernando Alonso,1106,Canadian Grand Prix,62,2,01:15.8,75779
+815,Sergio Pérez,1106,Canadian Grand Prix,70,6,01:14.5,74481
+830,Max Verstappen,1106,Canadian Grand Prix,68,1,01:15.6,75594
+1,Lewis Hamilton,1107,Austrian Grand Prix,48,7,01:09.2,69160
+4,Fernando Alonso,1107,Austrian Grand Prix,54,6,01:09.1,69108
+815,Sergio Pérez,1107,Austrian Grand Prix,52,5,01:08.1,68111
+830,Max Verstappen,1107,Austrian Grand Prix,71,1,01:07.0,67012
+1,Lewis Hamilton,1108,British Grand Prix,43,3,01:30.5,90545
+4,Fernando Alonso,1108,British Grand Prix,48,7,01:31.3,91338
+815,Sergio Pérez,1108,British Grand Prix,51,6,01:30.9,90914
+830,Max Verstappen,1108,British Grand Prix,42,1,01:30.3,90275
+1,Lewis Hamilton,1109,Hungarian Grand Prix,54,5,01:21.6,81601
+4,Fernando Alonso,1109,Hungarian Grand Prix,51,9,01:22.7,82745
+815,Sergio Pérez,1109,Hungarian Grand Prix,53,3,01:22.3,82295
+830,Max Verstappen,1109,Hungarian Grand Prix,53,1,01:20.5,80504
+1,Lewis Hamilton,1110,Belgian Grand Prix,44,4,01:47.3,107305
+4,Fernando Alonso,1110,Belgian Grand Prix,42,5,01:50.9,110938
+815,Sergio Pérez,1110,Belgian Grand Prix,31,2,01:50.3,110308
+830,Max Verstappen,1110,Belgian Grand Prix,32,1,01:48.9,108922
+1,Lewis Hamilton,1111,Dutch Grand Prix,58,8,01:13.9,73904
+4,Fernando Alonso,1111,Dutch Grand Prix,56,3,01:13.8,73837
+815,Sergio Pérez,1111,Dutch Grand Prix,59,2,01:14.2,74231
+830,Max Verstappen,1111,Dutch Grand Prix,58,1,01:13.9,73889
+1,Lewis Hamilton,1112,Italian Grand Prix,29,9,01:25.6,85582
+4,Fernando Alonso,1112,Italian Grand Prix,43,9,01:26.1,86105
+815,Sergio Pérez,1112,Italian Grand Prix,39,3,01:25.5,85522
+830,Max Verstappen,1112,Italian Grand Prix,33,1,01:25.2,85240
+1,Lewis Hamilton,1113,Singapore Grand Prix,47,5,01:35.9,95867
+4,Fernando Alonso,1113,Singapore Grand Prix,47,17,01:36.5,96456
+815,Sergio Pérez,1113,Singapore Grand Prix,61,9,01:37.1,97108
+830,Max Verstappen,1113,Singapore Grand Prix,61,6,01:36.6,96575
+1,Lewis Hamilton,1114,Japanese Grand Prix,36,7,01:35.6,95611
+4,Fernando Alonso,1114,Japanese Grand Prix,28,11,01:37.2,97203
+815,Sergio Pérez,1114,Japanese Grand Prix,8,16,01:39.7,99704
+830,Max Verstappen,1114,Japanese Grand Prix,39,1,01:34.2,94183
+4,Fernando Alonso,1115,Qatar Grand Prix,57,6,01:26.0,86045
+815,Sergio Pérez,1115,Qatar Grand Prix,50,12,01:26.2,86220
+830,Max Verstappen,1115,Qatar Grand Prix,56,1,01:24.3,84319
+1,Lewis Hamilton,1116,United States Grand Prix,42,4,01:39.6,99582
+4,Fernando Alonso,1116,United States Grand Prix,47,9,01:40.0,99954
+815,Sergio Pérez,1116,United States Grand Prix,40,6,01:39.7,99737
+830,Max Verstappen,1116,United States Grand Prix,40,1,01:40.0,100028
+1,Lewis Hamilton,1117,Mexico City Grand Prix,71,2,01:21.3,81334
+4,Fernando Alonso,1117,Mexico City Grand Prix,40,17,01:23.5,83531
+815,Sergio Pérez,1117,Mexico City Grand Prix,1,20,01:43.4,103446
+830,Max Verstappen,1117,Mexico City Grand Prix,40,1,01:21.6,81644
+1,Lewis Hamilton,1118,São Paulo Grand Prix,59,8,01:14.7,74739
+4,Fernando Alonso,1118,São Paulo Grand Prix,54,3,01:14.4,74442
+815,Sergio Pérez,1118,São Paulo Grand Prix,55,4,01:14.1,74124
+830,Max Verstappen,1118,São Paulo Grand Prix,68,1,01:13.4,73422
+1,Lewis Hamilton,1119,Las Vegas Grand Prix,48,8,01:35.7,95716
+4,Fernando Alonso,1119,Las Vegas Grand Prix,42,10,01:36.6,96559
+815,Sergio Pérez,1119,Las Vegas Grand Prix,40,3,01:35.9,95939
+830,Max Verstappen,1119,Las Vegas Grand Prix,44,1,01:35.6,95614
+1,Lewis Hamilton,1120,Abu Dhabi Grand Prix,52,9,01:28.4,88372
+4,Fernando Alonso,1120,Abu Dhabi Grand Prix,42,10,01:28.3,88256
+815,Sergio Pérez,1120,Abu Dhabi Grand Prix,44,5,01:27.5,87493
+830,Max Verstappen,1120,Abu Dhabi Grand Prix,45,1,01:27.0,86993
