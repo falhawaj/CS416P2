@@ -90,18 +90,27 @@ function updateScene() {
 }
 
 function showLapPlot(driverName, circuitName) {
-  lapPlotContainer.classed("hidden", false);
-
   const driverLaps = allLapData.filter(d => d.driverName === driverName && d.circuitName === circuitName);
   const verstappenLaps = allLapData.filter(d => d.driverName === "Max Verstappen" && d.circuitName === circuitName);
 
-  const allLaps = driverLaps.concat(verstappenLaps);
-  const maxLap = d3.max(allLaps, d => d.lap);
-  const minTime = d3.min(allLaps, d => d.time_ms);
-  const maxTime = d3.max(allLaps, d => d.time_ms);
+  if (driverLaps.length === 0) {
+    console.warn(`No lap data for ${driverName} at ${circuitName}`);
+    return;
+  }
 
-  const x = d3.scaleLinear().domain([1, maxLap]).range([0, width]);
-  const y = d3.scaleLinear().domain([minTime - 1000, maxTime + 1000]).range([height, 0]);
+  // Combine data for scaling
+  const allLaps = driverLaps.concat(verstappenLaps);
+
+  const x = d3.scaleLinear()
+    .domain([1, d3.max(allLaps, d => d.lap)])
+    .range([0, width]);
+
+  const y = d3.scaleLinear()
+    .domain([
+      d3.min(allLaps, d => d.time_ms) - 1000,
+      d3.max(allLaps, d => d.time_ms) + 1000
+    ])
+    .range([height, 0]);
 
   g2.selectAll("*").remove();
 
@@ -112,13 +121,13 @@ function showLapPlot(driverName, circuitName) {
     .x(d => x(d.lap))
     .y(d => y(d.time_ms));
 
-  // Driver
+  // Draw driver lap line
   g2.append("path")
     .datum(driverLaps)
     .attr("fill", "none")
     .attr("stroke", "steelblue")
-    .attr("stroke-dasharray", "4,2")
     .attr("stroke-width", 2)
+    .attr("stroke-dasharray", "4,2")
     .attr("d", line);
 
   g2.selectAll("circle.driver")
@@ -126,4 +135,36 @@ function showLapPlot(driverName, circuitName) {
     .enter()
     .append("circle")
     .attr("class", "driver")
-    .attr("cx", d => x(d.la
+    .attr("cx", d => x(d.lap))
+    .attr("cy", d => y(d.time_ms))
+    .attr("r", 4)
+    .attr("fill", "steelblue");
+
+  // Draw Verstappen reference line (if available)
+  if (verstappenLaps.length > 0) {
+    g2.append("path")
+      .datum(verstappenLaps)
+      .attr("fill", "none")
+      .attr("stroke", "orange")
+      .attr("stroke-dasharray", "5,5")
+      .attr("stroke-width", 2)
+      .attr("d", line);
+
+    g2.selectAll("circle.ref")
+      .data(verstappenLaps)
+      .enter()
+      .append("circle")
+      .attr("class", "ref")
+      .attr("cx", d => x(d.lap))
+      .attr("cy", d => y(d.time_ms))
+      .attr("r", 4)
+      .attr("fill", "orange");
+  }
+
+  // Legend
+  g2.append("text").attr("x", width - 140).attr("y", 20).text(driverName).attr("fill", "steelblue");
+  g2.append("text").attr("x", width - 140).attr("y", 40).text("Max Verstappen").attr("fill", "orange");
+
+  // Show the container
+  lapPlotContainer.classed("hidden", false);
+}
