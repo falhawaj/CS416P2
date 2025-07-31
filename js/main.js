@@ -14,7 +14,7 @@ let minLapData, allLapData;
 
 const driverColors = {
   "Max Verstappen": "#003773",
-  "Sergio PÃ©rez": "#E30118",
+  "Sergio Pérez": "#E30118",
   "Lewis Hamilton": "#565F64",
   "Fernando Alonso": "#229971"
 };
