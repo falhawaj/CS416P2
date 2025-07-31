@@ -8,6 +8,10 @@
     body { font-family: sans-serif; padding: 20px; }
     svg { border: 1px solid #ccc; margin-bottom: 20px; }
     .hidden { display: none; }
+    .rotate-label text {
+      transform: rotate(-45deg);
+      text-anchor: end;
+    }
   </style>
 </head>
 <body>
@@ -25,7 +29,7 @@
   <svg id="circuit-plot" width="800" height="400"></svg>
 
   <div id="lap-plot-container" class="hidden">
-    <h2>Lap Time vs. Lap</h2>
+    <h2 id="lap-title">Lap Time vs. Lap</h2>
     <svg id="lap-plot" width="800" height="400"></svg>
   </div>
 
