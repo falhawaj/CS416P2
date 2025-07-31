@@ -25,31 +25,45 @@ Promise.all([
 function updateScene() {
   const selectedDriver = d3.select("#driver-select").property("value");
 
-  // Filter min lap data for that driver
+  // Filter fastest laps for selected driver and Verstappen
   const driverMinLaps = minLapData.filter(d => d.driverName === selectedDriver);
+  const verstappenMinLaps = minLapData.filter(d => d.driverName === "Max Verstappen");
 
-  if (driverMinLaps.length === 0) {
+  // Map Verstappen's times by circuit
+  const verstappenMap = new Map(verstappenMinLaps.map(d => [d.circuitName, d.time_ms]));
+
+  let processedData;
+  if (selectedDriver === "Max Verstappen") {
+    processedData = driverMinLaps;
+  } else {
+    processedData = driverMinLaps
+      .filter(d => verstappenMap.has(d.circuitName))
+      .map(d => ({
+        circuitName: d.circuitName,
+        timeDiff: d.time_ms - verstappenMap.get(d.circuitName)
+      }));
+  }
+
+  if (processedData.length === 0) {
     console.warn(`No data for ${selectedDriver}`);
     return;
   }
 
-  const circuits = driverMinLaps.map(d => d.circuitName);
-
   const x = d3.scalePoint()
-    .domain(circuits)
+    .domain(processedData.map(d => d.circuitName))
     .range([0, width])
     .padding(0.5);
 
   const y = d3.scaleLinear()
     .domain([
-      d3.min(driverMinLaps, d => d.time_ms) - 1000,
-      d3.max(driverMinLaps, d => d.time_ms) + 1000
+      d3.min(processedData, d => selectedDriver === "Max Verstappen" ? d.time_ms : d.timeDiff) - 1000,
+      d3.max(processedData, d => selectedDriver === "Max Verstappen" ? d.time_ms : d.timeDiff) + 1000
     ])
     .range([height, 0]);
 
   g1.selectAll("*").remove();
 
-  // Axes
+  // X-axis
   g1.append("g")
     .attr("transform", `translate(0,${height})`)
     .call(d3.axisBottom(x))
@@ -58,15 +72,24 @@ function updateScene() {
     .on("click", (_, circuit) => showLapPlot(selectedDriver, circuit))
     .on("mouseover", (_, circuit) => showLapPlot(selectedDriver, circuit));
 
+  // Y-axis label changes based on driver
   g1.append("g").call(d3.axisLeft(y));
+  g1.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", -50)
+    .attr("x", -height / 2)
+    .attr("text-anchor", "middle")
+    .text(selectedDriver === "Max Verstappen" ? "Fastest Lap (ms)" : "Time Difference (ms)");
 
-  // Dots
+  const yAccessor = d => selectedDriver === "Max Verstappen" ? d.time_ms : d.timeDiff;
+
+  // Scatter points
   g1.selectAll("circle")
-    .data(driverMinLaps)
+    .data(processedData)
     .enter()
     .append("circle")
     .attr("cx", d => x(d.circuitName))
-    .attr("cy", d => y(d.time_ms))
+    .attr("cy", d => y(yAccessor(d)))
     .attr("r", 5)
     .attr("fill", "steelblue")
     .on("click", (_, d) => showLapPlot(selectedDriver, d.circuitName))
@@ -75,17 +98,17 @@ function updateScene() {
   // Connecting dashed line
   const line = d3.line()
     .x(d => x(d.circuitName))
-    .y(d => y(d.time_ms));
+    .y(d => y(yAccessor(d)));
 
   g1.append("path")
-    .datum(driverMinLaps)
+    .datum(processedData)
     .attr("fill", "none")
     .attr("stroke", "steelblue")
     .attr("stroke-dasharray", "5,5")
     .attr("stroke-width", 1.5)
     .attr("d", line);
 
-  // Hide lap plot until user interacts
+  // Hide secondary plot until user interacts
   lapPlotContainer.classed("hidden", true);
 }
 
@@ -98,8 +121,7 @@ function showLapPlot(driverName, circuitName) {
     return;
   }
 
-  // Combine data for scaling
-  const allLaps = driverLaps.concat(verstappenLaps);
+  const allLaps = driverName === "Max Verstappen" ? driverLaps : driverLaps.concat(verstappenLaps);
 
   const x = d3.scaleLinear()
     .domain([1, d3.max(allLaps, d => d.lap)])
@@ -121,13 +143,13 @@ function showLapPlot(driverName, circuitName) {
     .x(d => x(d.lap))
     .y(d => y(d.time_ms));
 
-  // Draw driver lap line
+  // Driver lap line
   g2.append("path")
     .datum(driverLaps)
     .attr("fill", "none")
     .attr("stroke", "steelblue")
-    .attr("stroke-width", 2)
     .attr("stroke-dasharray", "4,2")
+    .attr("stroke-width", 2)
     .attr("d", line);
 
   g2.selectAll("circle.driver")
@@ -140,8 +162,8 @@ function showLapPlot(driverName, circuitName) {
     .attr("r", 4)
     .attr("fill", "steelblue");
 
-  // Draw Verstappen reference line (if available)
-  if (verstappenLaps.length > 0) {
+  // Verstappen reference only for non-Verstappen drivers
+  if (driverName !== "Max Verstappen" && verstappenLaps.length > 0) {
     g2.append("path")
       .datum(verstappenLaps)
       .attr("fill", "none")
@@ -159,12 +181,12 @@ function showLapPlot(driverName, circuitName) {
       .attr("cy", d => y(d.time_ms))
       .attr("r", 4)
       .attr("fill", "orange");
+
+    g2.append("text").attr("x", width - 140).attr("y", 40).text("Max Verstappen").attr("fill", "orange");
   }
 
-  // Legend
   g2.append("text").attr("x", width - 140).attr("y", 20).text(driverName).attr("fill", "steelblue");
-  g2.append("text").attr("x", width - 140).attr("y", 40).text("Max Verstappen").attr("fill", "orange");
 
-  // Show the container
+  // Show secondary plot
   lapPlotContainer.classed("hidden", false);
 }
