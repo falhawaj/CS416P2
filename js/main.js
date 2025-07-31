@@ -1,8 +1,9 @@
 const svg1 = d3.select("#circuit-plot");
 const svg2 = d3.select("#lap-plot");
 const lapPlotContainer = d3.select("#lap-plot-container");
+const lapTitle = d3.select("#lap-title");
 
-const margin = { top: 20, right: 30, bottom: 50, left: 60 };
+const margin = { top: 20, right: 30, bottom: 100, left: 60 };
 const width = 800 - margin.left - margin.right;
 const height = 400 - margin.top - margin.bottom;
 
@@ -10,6 +11,13 @@ const g1 = svg1.append("g").attr("transform", `translate(${margin.left},${margin
 const g2 = svg2.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
 let minLapData, allLapData;
+
+const driverColors = {
+  "Max Verstappen": "#003773",
+  "Sergio PÃ©rez": "#E30118",
+  "Lewis Hamilton": "#565F64",
+  "Fernando Alonso": "#229971"
+};
 
 Promise.all([
   d3.csv("data/min_lap_times_with_names.csv", d3.autoType),
@@ -19,96 +27,108 @@ Promise.all([
   allLapData = allData;
 
   d3.select("#driver-select").on("change", updateScene);
-  updateScene(); // initial render
+  updateScene();
 });
 
 function updateScene() {
   const selectedDriver = d3.select("#driver-select").property("value");
 
-  // Filter fastest laps for selected driver and Verstappen
   const driverMinLaps = minLapData.filter(d => d.driverName === selectedDriver);
   const verstappenMinLaps = minLapData.filter(d => d.driverName === "Max Verstappen");
 
-  // Map Verstappen's times by circuit
   const verstappenMap = new Map(verstappenMinLaps.map(d => [d.circuitName, d.time_ms]));
 
   let processedData;
+
   if (selectedDriver === "Max Verstappen") {
-    processedData = driverMinLaps;
+    processedData = driverMinLaps.map(d => ({
+      circuitName: d.circuitName,
+      shortName: d.circuitName.replace(" Grand Prix", ""),
+      time: d.time_ms
+    }));
   } else {
     processedData = driverMinLaps
       .filter(d => verstappenMap.has(d.circuitName))
       .map(d => ({
         circuitName: d.circuitName,
+        shortName: d.circuitName.replace(" Grand Prix", ""),
         timeDiff: d.time_ms - verstappenMap.get(d.circuitName)
       }));
   }
 
-  if (processedData.length === 0) {
-    console.warn(`No data for ${selectedDriver}`);
-    return;
-  }
-
   const x = d3.scalePoint()
-    .domain(processedData.map(d => d.circuitName))
+    .domain(processedData.map(d => d.shortName))
     .range([0, width])
     .padding(0.5);
 
   const y = d3.scaleLinear()
     .domain([
-      d3.min(processedData, d => selectedDriver === "Max Verstappen" ? d.time_ms : d.timeDiff) - 1000,
-      d3.max(processedData, d => selectedDriver === "Max Verstappen" ? d.time_ms : d.timeDiff) + 1000
+      d3.min(processedData, d => selectedDriver === "Max Verstappen" ? d.time : d.timeDiff) - 1000,
+      d3.max(processedData, d => selectedDriver === "Max Verstappen" ? d.time : d.timeDiff) + 1000
     ])
     .range([height, 0]);
 
   g1.selectAll("*").remove();
 
-  // X-axis
+  // X-axis with rotated labels
   g1.append("g")
     .attr("transform", `translate(0,${height})`)
     .call(d3.axisBottom(x))
     .selectAll("text")
-    .style("cursor", "pointer")
-    .on("click", (_, circuit) => showLapPlot(selectedDriver, circuit))
-    .on("mouseover", (_, circuit) => showLapPlot(selectedDriver, circuit));
+    .style("text-anchor", "end")
+    .attr("transform", "rotate(-45)")
+    .on("click", (_, circuitShort) => {
+      const full = processedData.find(d => d.shortName === circuitShort)?.circuitName;
+      if (full) showLapPlot(selectedDriver, full);
+    });
 
-  // Y-axis label changes based on driver
+  // Y-axis
   g1.append("g").call(d3.axisLeft(y));
   g1.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", -50)
     .attr("x", -height / 2)
     .attr("text-anchor", "middle")
-    .text(selectedDriver === "Max Verstappen" ? "Fastest Lap (ms)" : "Time Difference (ms)");
+    .text(selectedDriver === "Max Verstappen" ? "Fastest Lap (ms)" : "Difference to Verstappen (ms)");
 
-  const yAccessor = d => selectedDriver === "Max Verstappen" ? d.time_ms : d.timeDiff;
+  // Reference line at y=0 for comparisons
+  if (selectedDriver !== "Max Verstappen") {
+    g1.append("line")
+      .attr("x1", 0)
+      .attr("x2", width)
+      .attr("y1", y(0))
+      .attr("y2", y(0))
+      .attr("stroke", "#003773")
+      .attr("stroke-dasharray", "5,5")
+      .attr("stroke-width", 1);
+  }
 
-  // Scatter points
+  const yAccessor = d => selectedDriver === "Max Verstappen" ? d.time : d.timeDiff;
+  const color = driverColors[selectedDriver];
+
   g1.selectAll("circle")
     .data(processedData)
     .enter()
     .append("circle")
-    .attr("cx", d => x(d.circuitName))
+    .attr("cx", d => x(d.shortName))
     .attr("cy", d => y(yAccessor(d)))
     .attr("r", 5)
-    .attr("fill", "steelblue")
-    .on("click", (_, d) => showLapPlot(selectedDriver, d.circuitName))
-    .on("mouseover", (_, d) => showLapPlot(selectedDriver, d.circuitName));
+    .attr("fill", color)
+    .style("cursor", "pointer")
+    .on("click", (_, d) => showLapPlot(selectedDriver, d.circuitName));
 
-  // Connecting dashed line
   const line = d3.line()
-    .x(d => x(d.circuitName))
+    .x(d => x(d.shortName))
     .y(d => y(yAccessor(d)));
 
   g1.append("path")
     .datum(processedData)
     .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-dasharray", "5,5")
-    .attr("stroke-width", 1.5)
+    .attr("stroke", color)
+    .attr("stroke-dasharray", "0")
+    .attr("stroke-width", 2)
     .attr("d", line);
 
-  // Hide secondary plot until user interacts
   lapPlotContainer.classed("hidden", true);
 }
 
@@ -116,10 +136,9 @@ function showLapPlot(driverName, circuitName) {
   const driverLaps = allLapData.filter(d => d.driverName === driverName && d.circuitName === circuitName);
   const verstappenLaps = allLapData.filter(d => d.driverName === "Max Verstappen" && d.circuitName === circuitName);
 
-  if (driverLaps.length === 0) {
-    console.warn(`No lap data for ${driverName} at ${circuitName}`);
-    return;
-  }
+  if (driverLaps.length === 0) return;
+
+  lapTitle.text(`Lap Time vs. Lap for ${circuitName}`);
 
   const allLaps = driverName === "Max Verstappen" ? driverLaps : driverLaps.concat(verstappenLaps);
 
@@ -143,13 +162,15 @@ function showLapPlot(driverName, circuitName) {
     .x(d => x(d.lap))
     .y(d => y(d.time_ms));
 
-  // Driver lap line
+  const driverColor = driverColors[driverName];
+
+  // Driver line
   g2.append("path")
     .datum(driverLaps)
     .attr("fill", "none")
-    .attr("stroke", "steelblue")
-    .attr("stroke-dasharray", "4,2")
+    .attr("stroke", driverColor)
     .attr("stroke-width", 2)
+    .attr("stroke-dasharray", "0")
     .attr("d", line);
 
   g2.selectAll("circle.driver")
@@ -160,14 +181,14 @@ function showLapPlot(driverName, circuitName) {
     .attr("cx", d => x(d.lap))
     .attr("cy", d => y(d.time_ms))
     .attr("r", 4)
-    .attr("fill", "steelblue");
+    .attr("fill", driverColor);
 
-  // Verstappen reference only for non-Verstappen drivers
+  // Verstappen reference (if not Verstappen)
   if (driverName !== "Max Verstappen" && verstappenLaps.length > 0) {
     g2.append("path")
       .datum(verstappenLaps)
       .attr("fill", "none")
-      .attr("stroke", "orange")
+      .attr("stroke", "#003773")
       .attr("stroke-dasharray", "5,5")
       .attr("stroke-width", 2)
       .attr("d", line);
@@ -180,13 +201,12 @@ function showLapPlot(driverName, circuitName) {
       .attr("cx", d => x(d.lap))
       .attr("cy", d => y(d.time_ms))
       .attr("r", 4)
-      .attr("fill", "orange");
+      .attr("fill", "#003773");
 
-    g2.append("text").attr("x", width - 140).attr("y", 40).text("Max Verstappen").attr("fill", "orange");
+    g2.append("text").attr("x", width - 140).attr("y", 40).text("Max Verstappen").attr("fill", "#003773");
   }
 
-  g2.append("text").attr("x", width - 140).attr("y", 20).text(driverName).attr("fill", "steelblue");
+  g2.append("text").attr("x", width - 140).attr("y", 20).text(driverName).attr("fill", driverColor);
 
-  // Show secondary plot
   lapPlotContainer.classed("hidden", false);
 }
