@@ -24,6 +24,14 @@ Promise.all([
   d3.csv("data/min_lap_times_with_names.csv", d3.autoType),
   d3.csv("data/lap_times_with_names.csv", d3.autoType)
 ]).then(([minData, allData]) => {
+  // 🔧 Normalize incorrectly encoded names
+  minData.forEach(d => {
+    if (d.driverName === "Sergio PÃ©rez") d.driverName = "Sergio Pérez";
+  });
+  allData.forEach(d => {
+    if (d.driverName === "Sergio PÃ©rez") d.driverName = "Sergio Pérez";
+  });
+
   minLapData = minData;
   allLapData = allData;
 
