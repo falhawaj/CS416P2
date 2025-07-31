@@ -12,10 +12,13 @@
       transform: rotate(-45deg);
       text-anchor: end;
     }
+    .legend {
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
-  <h1>F1 Lap Times</h1>
+  <h1 id="main-title">F1 Lap Times</h1>
 
   <label for="driver-select">Choose a Driver: </label>
   <select id="driver-select">
@@ -25,12 +28,12 @@
     <option value="Fernando Alonso">Fernando Alonso</option>
   </select>
 
-  <h2>Fastest Lap Time vs Circuit (Difference vs. Verstappen if applicable)</h2>
-  <svg id="circuit-plot" width="800" height="400"></svg>
+  <h2 id="primary-title"></h2>
+  <svg id="circuit-plot" width="800" height="450"></svg>
 
   <div id="lap-plot-container" class="hidden">
     <h2 id="lap-title">Lap Time vs. Lap</h2>
-    <svg id="lap-plot" width="800" height="400"></svg>
+    <svg id="lap-plot" width="800" height="450"></svg>
   </div>
 
   <script src="js/main.js"></script>
