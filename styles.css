@@ -23,3 +23,11 @@ svg {
   font-size: 14px;
   alignment-baseline: middle;
 }
+
+.annotation-note-label {
+  font-size: 12px;
+}
+
+.annotation-note-title {
+  font-weight: bold;
+}
