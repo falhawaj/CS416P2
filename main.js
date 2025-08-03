@@ -1,5 +1,3 @@
-// main.js
-
 const svg1 = d3.select("#circuit-plot");
 const svg2 = d3.select("#lap-plot");
 
@@ -78,6 +76,7 @@ function updateScene() {
 
   g1.selectAll("*").remove();
 
+  // X Axis
   g1.append("g")
     .attr("transform", `translate(0,${height})`)
     .call(d3.axisBottom(x))
@@ -98,60 +97,12 @@ function updateScene() {
     .attr("text-anchor", "middle")
     .text("Grand Prix");
 
+  // Y Axis
   g1.append("g").call(d3.axisLeft(y));
+
   g1.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", -50)
     .attr("x", -height / 2)
     .attr("text-anchor", "middle")
-    .text(selectedDriver === "Max Verstappen" ? "Fastest Lap (ms)" : "Difference to Verstappen (ms)");
-
-  if (selectedDriver !== "Max Verstappen") {
-    g1.append("line")
-      .attr("x1", 0).attr("x2", width)
-      .attr("y1", y(0)).attr("y2", y(0))
-      .attr("stroke", "#003773").attr("stroke-dasharray", "5,5").attr("stroke-width", 1);
-  }
-
-  const yAccessor = d => selectedDriver === "Max Verstappen" ? d.time : d.timeDiff;
-  const color = driverColors[selectedDriver];
-
-  processedData.forEach(d => {
-    d.x = x(d.shortName);
-    d.y = y(yAccessor(d));
-  });
-
-  g1.selectAll("circle")
-    .data(processedData)
-    .enter()
-    .append("circle")
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y)
-    .attr("r", 5)
-    .attr("fill", color)
-    .style("cursor", "pointer")
-    .on("click", (_, d) => showLapPlot(selectedDriver, d.circuitName));
-
-  const line = d3.line()
-    .x(d => d.x)
-    .y(d => d.y);
-
-  g1.append("path")
-    .datum(processedData)
-    .attr("fill", "none")
-    .attr("stroke", color)
-    .attr("stroke-width", 2)
-    .attr("d", line);
-
-  // Legend
-  const legend = svg1.append("g")
-    .attr("transform", `translate(${margin.left + 10}, 10)`);
-  legend.append("rect").attr("width", 15).attr("height", 15).attr("fill", color);
-  legend.append("text").attr("x", 20).attr("y", 12).text(selectedDriver);
-  if (selectedDriver !== "Max Verstappen") {
-    legend.append("rect").attr("x", 100).attr("width", 15).attr("height", 15).attr("fill", "none").attr("stroke", "#003773").attr("stroke-dasharray", "4,2");
-    legend.append("text").attr("x", 120).attr("y", 12).text("Max Verstappen");
-  }
-
-  svg2.classed("hidden", true);
-}
+    .text(selectedDriver ===
