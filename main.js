@@ -190,7 +190,7 @@ function updateScene() {
     }
   };
 
-  if (selectedDriver === "Max Verstappen") addAnnotation("Dutch GP", "Verstappen’s home race");
+  if (selectedDriver === "Max Verstappen") addAnnotation("Dutch", "Verstappen’s home race");
   if (selectedDriver === "Sergio Pérez") {
     addAnnotation("Mexico City", "Pérez’s home race, did not finish the race.");
     addAnnotation("Japanese", "Did not finish the race.");
