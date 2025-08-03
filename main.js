@@ -1,4 +1,4 @@
-// Full main.js with static annotations using d3-annotation
+// Full main.js with static annotations using d3-annotation and working click on axis labels and dots
 
 const svg1 = d3.select("#circuit-plot");
 const svg2 = d3.select("#lap-plot");
@@ -7,7 +7,7 @@ const lapTitle = d3.select("#lap-title");
 const primaryTitle = d3.select("#primary-title");
 
 const margin = { top: 20, right: 30, bottom: 120, left: 60 };
-const width = 800 - margin.left - margin.right;
+const width = 1000 - margin.left - margin.right;
 const height = 450 - margin.top - margin.bottom;
 
 const g1 = svg1.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
@@ -89,9 +89,11 @@ function updateScene() {
     .style("text-anchor", "end")
     .attr("transform", "rotate(-45)")
     .style("cursor", "pointer")
-    .on("click", (_, short) => {
-      const full = processedData.find(d => d.shortName === short)?.circuitName;
-      if (full) showLapPlot(selectedDriver, full);
+    .on("click", function(_, labelText) {
+      const clickedData = processedData.find(d => d.shortName === labelText);
+      if (clickedData && clickedData.circuitName) {
+        showLapPlot(selectedDriver, clickedData.circuitName);
+      }
     });
 
   g1.append("text")
@@ -153,53 +155,4 @@ function updateScene() {
   g1.append("g").attr("class", "annotation-group").call(makeAnnotations);
 
   lapPlotContainer.classed("hidden", true);
-}
-
-function getStaticAnnotations(driver, processedData) {
-  const annotations = [];
-  const map = {
-    "Max Verstappen": {
-      "Belgian Grand Prix": "The Belgian Grand Prix circuit (Spa-Francorchamps circuit) usually takes the longest to lap as it spans 4.352 miles. Verstappen is of Belgian descent.",
-      "Austrian Grand Prix": "Austria is the home country of Red Bull Racing, Verstappen’s Formula One team. The Austrian Grand Prix circuit is named Red Bull Ring.",
-      "Dutch Grand Prix": "Verstappen’s home country."
-    },
-    "Sergio Pérez": {
-      "Mexico City Grand Prix": "Pérez’s home country."
-    },
-    "Lewis Hamilton": {
-      "British Grand Prix": "Hamilton’s home country."
-    },
-    "Fernando Alonso": {
-      "Spanish Grand Prix": "Alonso’s home country."
-    }
-  };
-
-  const dnfs = new Set(
-    raceResults.filter(r => r.driverName === driver && r.position === "\\N")
-               .map(r => r.circuitName)
-  );
-
-  processedData.forEach(d => {
-    const circuit = d.circuitName;
-    if (map[driver]?.[circuit]) {
-      annotations.push({
-        note: { title: circuit, label: map[driver][circuit] },
-        x: d.x,
-        y: d.y,
-        dy: -40,
-        dx: 0
-      });
-    }
-    if (dnfs.has(circuit)) {
-      annotations.push({
-        note: { title: circuit, label: `${driver} did not finish this race.` },
-        x: d.x,
-        y: d.y,
-        dy: 30,
-        dx: 0
-      });
-    }
-  });
-
-  return annotations;
 }
