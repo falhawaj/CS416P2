@@ -181,7 +181,7 @@ function updateScene() {
     const pt = processedData.find(d => d.shortName === shortName);
     if (pt) {
       annotations.push({
-        note: { label: message, title: shortName },
+        note: { label: message },
         x: pt.x,
         y: pt.y,
         dx: 0,
@@ -192,16 +192,15 @@ function updateScene() {
 
   if (selectedDriver === "Max Verstappen") addAnnotation("Dutch", "Verstappen’s home race");
   if (selectedDriver === "Sergio Pérez") {
-    addAnnotation("Mexico City", "Pérez’s home race");
+    addAnnotation("Mexico City", "Pérez’s home race, did not finish the race.");
     addAnnotation("Japanese", "Did not finish the race.");
-    addAnnotation("Mexico City", "Did not finish the race.");
   }
   if (selectedDriver === "Lewis Hamilton") {
-    addAnnotation("British", "Hamilton’s home country");
+    addAnnotation("British", "Hamilton’s home race");
     addAnnotation("United States", "Did not finish the race.");
   }
   if (selectedDriver === "Fernando Alonso") {
-    addAnnotation("Spanish", "Alonso’s home country");
+    addAnnotation("Spanish", "Alonso’s home race");
     addAnnotation("United States", "Did not finish the race.");
     addAnnotation("Mexico City", "Did not finish the race.");
   }
