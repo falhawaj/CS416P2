@@ -1,4 +1,4 @@
-// Full main.js with static annotations, DNF messages, and scene support
+// Full main.js with static annotations using d3-annotation
 
 const svg1 = d3.select("#circuit-plot");
 const svg2 = d3.select("#lap-plot");
@@ -17,7 +17,6 @@ let minLapData, allLapData, raceResults;
 
 const driverColors = {
   "Max Verstappen": "#003773",
-  "Sergio PÃ©rez": "#E30118",
   "Sergio Pérez": "#E30118",
   "Lewis Hamilton": "#565F64",
   "Fernando Alonso": "#229971"
@@ -183,10 +182,22 @@ function getStaticAnnotations(driver, processedData) {
   processedData.forEach(d => {
     const circuit = d.circuitName;
     if (map[driver]?.[circuit]) {
-      annotations.push({ note: { title: circuit, label: map[driver][circuit] }, x: d.x, y: d.y, dy: -30, dx: 0 });
+      annotations.push({
+        note: { title: circuit, label: map[driver][circuit] },
+        x: d.x,
+        y: d.y,
+        dy: -40,
+        dx: 0
+      });
     }
     if (dnfs.has(circuit)) {
-      annotations.push({ note: { title: circuit, label: `${driver} did not finish this race.` }, x: d.x, y: d.y, dy: 30, dx: 0 });
+      annotations.push({
+        note: { title: circuit, label: `${driver} did not finish this race.` },
+        x: d.x,
+        y: d.y,
+        dy: 30,
+        dx: 0
+      });
     }
   });
 
