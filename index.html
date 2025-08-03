@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>F1 Lap Times Visualization</title>
+  <title>F1 Fastest Laps</title>
   <link rel="stylesheet" href="styles.css">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/d3-svg-annotation@2.5.1/d3-annotation.min.js"></script>
@@ -14,8 +14,9 @@
     <button onclick="loadDriver('Lewis Hamilton')">Lewis Hamilton</button>
     <button onclick="loadDriver('Fernando Alonso')">Fernando Alonso</button>
   </div>
+
   <h2 id="main-title">Fastest Lap Time vs. Circuit</h2>
-  <svg id="primary" width="1200" height="500"></svg>
+  <svg id="primary" width="1200" height="550"></svg>
   <svg id="secondary" width="1000" height="500" class="hidden"></svg>
 
   <script src="main.js"></script>
