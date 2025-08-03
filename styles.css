@@ -1,27 +1,28 @@
 body {
-  font-family: Arial, sans-serif;
-  margin: 40px;
+  font-family: sans-serif;
+  margin: 30px;
+  background: #f9f9f9;
+}
+
+.buttons {
+  margin-bottom: 10px;
+}
+
+button {
+  padding: 10px 15px;
+  margin-right: 10px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 svg {
-  width: 1100px;
-  height: 550px;
-  overflow: visible;
-  display: block;
-  margin-top: 30px;
+  background: white;
+  border: 1px solid #ccc;
+  margin-bottom: 40px;
 }
 
 .hidden {
   display: none;
-}
-
-.legend-group line {
-  stroke-width: 2;
-}
-
-.legend-group text {
-  font-size: 14px;
-  alignment-baseline: middle;
 }
 
 .annotation-note-label {
