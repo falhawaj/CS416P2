@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 40px;
+  background-color: #f9f9f9;
+}
+
+label, select {
+  font-size: 1rem;
+  margin-right: 20px;
+}
+
+svg {
+  background-color: white;
+  border: 1px solid #ccc;
+  margin-top: 20px;
+}
+
+.hidden {
+  display: none;
+}
+
+.annotation-group .annotation path {
+  stroke: black;
+  stroke-width: 1;
+}
+
+.annotation-group .annotation text {
+  font-size: 12px;
+  fill: black;
+}
