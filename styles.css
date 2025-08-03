@@ -1,18 +1,14 @@
 body {
   font-family: Arial, sans-serif;
   margin: 40px;
-  background-color: #f9f9f9;
-}
-
-label, select {
-  font-size: 1rem;
-  margin-right: 20px;
 }
 
 svg {
-  background-color: white;
-  border: 1px solid #ccc;
-  margin-top: 20px;
+  width: 1100px;
+  height: 550px;
+  overflow: visible;
+  display: block;
+  margin-top: 30px;
 }
 
 .hidden {
