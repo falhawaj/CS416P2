@@ -36,6 +36,24 @@ Promise.all([
 function updateScene() {
   const selectedDriver = d3.select("#driver-select").property("value");
 
+  // 🔽 Add Verstappen-specific paragraph
+  const description = d3.select("#verstappen-description");
+  if (selectedDriver === "Max Verstappen") {
+    description.html(`
+      <p>
+        Max Verstappen won the 2023 Formula One season with 575 points. Sergio Pérez, Lewis Hamilton,
+        and Fernando Alonso followed with 285, 234, and 206 points, respectively. You can see Verstappen’s
+        fastest lap times in the plot below (and all the lap times by clicking on a specific race), and choose
+        one of the aforementioned drivers to compare their performance against Verstappen’s. This is intended
+        to show the performance difference between Verstappen and Pérez, as they drive the same car. It is also
+        intended to show the difference in equipment quality between Mercedes (Hamilton’s car) and Aston Martin
+        (Alonso’s car).
+      </p>
+    `);
+  } else {
+    description.html("");
+  }
+
   const driverMinLaps = minLapData.filter(d => d.driverName === selectedDriver);
   const verstappenMinLaps = minLapData.filter(d => d.driverName === "Max Verstappen");
   const verstappenMap = new Map(verstappenMinLaps.map(d => [d.circuitName, d.time_ms]));
