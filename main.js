@@ -105,4 +105,182 @@ function updateScene() {
     .attr("y", -50)
     .attr("x", -height / 2)
     .attr("text-anchor", "middle")
-    .text(selectedDriver ===
+    .text(selectedDriver === "Max Verstappen" ? "Fastest Lap (ms)" : "Difference to Verstappen (ms)");
+
+  if (selectedDriver !== "Max Verstappen") {
+    g1.append("line")
+      .attr("x1", 0)
+      .attr("x2", width)
+      .attr("y1", y(0))
+      .attr("y2", y(0))
+      .attr("stroke", "#003773")
+      .attr("stroke-dasharray", "5,5")
+      .attr("stroke-width", 1);
+  }
+
+  const yAccessor = d => selectedDriver === "Max Verstappen" ? d.time : d.timeDiff;
+  const color = driverColors[selectedDriver];
+
+  processedData.forEach(d => {
+    d.x = x(d.shortName);
+    d.y = y(yAccessor(d));
+  });
+
+  g1.selectAll("circle")
+    .data(processedData)
+    .enter()
+    .append("circle")
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", 5)
+    .attr("fill", color)
+    .style("cursor", "pointer")
+    .on("click", (_, d) => showLapPlot(selectedDriver, d.circuitName));
+
+  const line = d3.line()
+    .x(d => d.x)
+    .y(d => d.y);
+
+  g1.append("path")
+    .datum(processedData)
+    .attr("fill", "none")
+    .attr("stroke", color)
+    .attr("stroke-width", 2)
+    .attr("d", line);
+
+  // Legend
+  const legend = svg1.append("g")
+    .attr("transform", `translate(${margin.left + 10}, 10)`);
+
+  legend.append("rect").attr("width", 15).attr("height", 15).attr("fill", color);
+  legend.append("text").attr("x", 20).attr("y", 12).text(selectedDriver);
+
+  if (selectedDriver !== "Max Verstappen") {
+    legend.append("rect")
+      .attr("x", 100).attr("width", 15).attr("height", 15)
+      .attr("fill", "none").attr("stroke", "#003773").attr("stroke-dasharray", "4,2");
+
+    legend.append("text").attr("x", 120).attr("y", 12).text("Max Verstappen");
+  }
+
+  svg2.classed("hidden", true);
+}
+
+function showLapPlot(driverName, circuitName) {
+  svg2.html("");
+  svg2.classed("hidden", false);
+
+  const margin = { top: 60, right: 60, bottom: 60, left: 80 };
+  const width = 1000 - margin.left - margin.right;
+  const height = 450 - margin.top - margin.bottom;
+
+  const g2 = svg2
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+  const driverLaps = allLapData.filter(
+    d => d.driverName === driverName && d.circuitName === circuitName
+  );
+
+  const verstappenLaps = allLapData.filter(
+    d => d.driverName === "Max Verstappen" && d.circuitName === circuitName
+  );
+
+  if (driverLaps.length === 0) {
+    g2.append("text").text("No data found.").attr("x", 100).attr("y", 100);
+    return;
+  }
+
+  const x = d3.scaleLinear()
+    .domain(d3.extent(driverLaps, d => d.lap))
+    .range([0, width]);
+
+  const y = d3.scaleLinear()
+    .domain([
+      d3.min(driverLaps.concat(verstappenLaps), d => d.time_ms) - 1000,
+      d3.max(driverLaps.concat(verstappenLaps), d => d.time_ms) + 1000
+    ])
+    .range([height, 0]);
+
+  g2.append("g")
+    .attr("transform", `translate(0, ${height})`)
+    .call(d3.axisBottom(x).ticks(10));
+
+  g2.append("g").call(d3.axisLeft(y));
+
+  g2.append("text")
+    .attr("x", width / 2)
+    .attr("y", height + 40)
+    .attr("text-anchor", "middle")
+    .text("Lap");
+
+  g2.append("text")
+    .attr("x", -height / 2)
+    .attr("y", -50)
+    .attr("transform", "rotate(-90)")
+    .attr("text-anchor", "middle")
+    .text("Lap Time (ms)");
+
+  g2.append("text")
+    .attr("x", width / 2)
+    .attr("y", -20)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "16px")
+    .text(`Lap Time vs. Lap for ${circuitName}`);
+
+  const line = d3.line()
+    .x(d => x(d.lap))
+    .y(d => y(d.time_ms));
+
+  const mainColor = driverColors[driverName];
+
+  g2.append("path")
+    .datum(driverLaps)
+    .attr("fill", "none")
+    .attr("stroke", mainColor)
+    .attr("stroke-width", 2)
+    .attr("d", line);
+
+  g2.selectAll(".dot")
+    .data(driverLaps)
+    .enter()
+    .append("circle")
+    .attr("cx", d => x(d.lap))
+    .attr("cy", d => y(d.time_ms))
+    .attr("r", 4)
+    .attr("fill", mainColor);
+
+  if (driverName !== "Max Verstappen") {
+    g2.append("path")
+      .datum(verstappenLaps)
+      .attr("fill", "none")
+      .attr("stroke", "#003773")
+      .attr("stroke-dasharray", "5,5")
+      .attr("stroke-width", 2)
+      .attr("d", line);
+
+    g2.selectAll(".ref-dot")
+      .data(verstappenLaps)
+      .enter()
+      .append("circle")
+      .attr("cx", d => x(d.lap))
+      .attr("cy", d => y(d.time_ms))
+      .attr("r", 4)
+      .attr("fill", "#003773");
+  }
+
+  // Legend
+  const legend = svg2.append("g")
+    .attr("transform", `translate(${margin.left + 10}, 10)`);
+
+  legend.append("rect").attr("width", 15).attr("height", 15).attr("fill", mainColor);
+  legend.append("text").attr("x", 20).attr("y", 12).text(driverName);
+
+  if (driverName !== "Max Verstappen") {
+    legend.append("rect")
+      .attr("x", 100).attr("width", 15).attr("height", 15)
+      .attr("fill", "none").attr("stroke", "#003773").attr("stroke-dasharray", "4,2");
+
+    legend.append("text").attr("x", 120).attr("y", 12).text("Max Verstappen");
+  }
+}
