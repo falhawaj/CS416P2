@@ -175,6 +175,34 @@ function updateScene() {
       .text("Max Verstappen");
   }
 
+  // Annotations
+  const annotations = [];
+  const addAnnotation = (shortName, message) => {
+    const pt = processedData.find(d => d.shortName === shortName);
+    if (pt) {
+      annotations.push({
+        note: { label: message, title: shortName },
+        x: pt.x,
+        y: pt.y,
+        dx: 0,
+        dy: -40
+      });
+    }
+  };
+
+  if (selectedDriver === "Max Verstappen") addAnnotation("Dutch", "Verstappen’s home race");
+  if (selectedDriver === "Sergio Pérez") addAnnotation("Mexico City", "Pérez’s home race");
+  if (selectedDriver === "Lewis Hamilton") addAnnotation("British", "Hamilton’s home country");
+  if (selectedDriver === "Fernando Alonso") addAnnotation("Spanish", "Alonso’s home country");
+
+  if (annotations.length > 0) {
+    const makeAnnotations = d3.annotation()
+      .type(d3.annotationLabel)
+      .annotations(annotations);
+
+    g1.append("g").attr("class", "annotation-group").call(makeAnnotations);
+  }
+
   svg2.classed("hidden", true);
 }
 
@@ -190,11 +218,6 @@ function showLapPlot(driverName, circuitName) {
 
   const driverLaps = allLapData.filter(d => d.driverName === driverName && d.circuitName === circuitName);
   const verstappenLaps = allLapData.filter(d => d.driverName === "Max Verstappen" && d.circuitName === circuitName);
-
-  if (driverLaps.length === 0) {
-    g2.append("text").text("No data found.").attr("x", 100).attr("y", 100);
-    return;
-  }
 
   const allTimes = driverLaps.map(d => d.time_ms).concat(verstappenLaps.map(d => d.time_ms));
   const x = d3.scaleLinear()
@@ -247,7 +270,7 @@ function showLapPlot(driverName, circuitName) {
     .attr("r", 4)
     .attr("fill", mainColor);
 
-  if (driverName !== "Max Verstappen" && verstappenLaps.length > 0) {
+  if (driverName !== "Max Verstappen") {
     g2.append("path")
       .datum(verstappenLaps)
       .attr("fill", "none")
