@@ -22,9 +22,15 @@ svg {
 .annotation-group .annotation path {
   stroke: black;
   stroke-width: 1;
+  fill: none;
 }
 
 .annotation-group .annotation text {
   font-size: 12px;
   fill: black;
+  font-family: sans-serif;
+}
+
+.annotation-note-title {
+  font-weight: bold;
 }
