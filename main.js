@@ -7,7 +7,7 @@ const height = 450 - margin.top - margin.bottom;
 
 const g1 = svg1.append("g").attr("transform", `translate(${margin.left},${margin.top})`);
 
-let minLapData, allLapData;
+let minLapData, allLapData, dnfResults;
 
 const driverColors = {
   "Max Verstappen": "#003773",
@@ -18,9 +18,10 @@ const driverColors = {
 
 Promise.all([
   d3.csv("data/min_lap_times_with_names.csv", d3.autoType),
-  d3.csv("data/lap_times_with_names.csv", d3.autoType)
-]).then(([minData, allData]) => {
-  [minData, allData].forEach(data => {
+  d3.csv("data/lap_times_with_names.csv", d3.autoType),
+  d3.csv("data/results_with_names.csv", d3.autoType)
+]).then(([minData, allData, resultsData]) => {
+  [minData, allData, resultsData].forEach(data => {
     data.forEach(d => {
       if (d.driverName === "Sergio PÃ©rez") d.driverName = "Sergio Pérez";
     });
@@ -28,6 +29,7 @@ Promise.all([
 
   minLapData = minData;
   allLapData = allData;
+  dnfResults = resultsData.filter(d => d.position === "\\N");
 
   d3.select("#driver-select").on("change", updateScene);
   updateScene();
@@ -137,7 +139,6 @@ function updateScene() {
     .attr("stroke-width", 2)
     .attr("d", line);
 
-  // Legend
   svg1.selectAll(".legend-group").remove();
   const legend = svg1.append("g")
     .attr("class", "legend-group")
@@ -175,7 +176,6 @@ function updateScene() {
       .text("Max Verstappen");
   }
 
-  // Annotations
   const annotations = [];
   const addAnnotation = (shortName, message) => {
     const pt = processedData.find(d => d.shortName === shortName);
@@ -195,6 +195,25 @@ function updateScene() {
   if (selectedDriver === "Lewis Hamilton") addAnnotation("British", "Hamilton’s home country");
   if (selectedDriver === "Fernando Alonso") addAnnotation("Spanish", "Alonso’s home country");
 
+  // Add DNF annotations
+  const dnfEntries = dnfResults.filter(d => d.driverName === selectedDriver);
+  dnfEntries.forEach(entry => {
+    const shortName = entry.circuitName.replace(" Grand Prix", "");
+    const pt = processedData.find(d => d.shortName === shortName);
+    if (pt) {
+      annotations.push({
+        note: {
+          label: `${selectedDriver} did not finish the race.`,
+          title: shortName
+        },
+        x: pt.x,
+        y: pt.y,
+        dx: 0,
+        dy: -60
+      });
+    }
+  });
+
   if (annotations.length > 0) {
     const makeAnnotations = d3.annotation()
       .type(d3.annotationLabel)
@@ -205,6 +224,9 @@ function updateScene() {
 
   svg2.classed("hidden", true);
 }
+
+// showLapPlot() unchanged — you already have it
+
 
 function showLapPlot(driverName, circuitName) {
   svg2.html("").classed("hidden", false);
