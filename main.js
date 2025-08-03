@@ -203,4 +203,43 @@ function showLapPlot(driverName, circuitName) {
   g2.append("g").call(d3.axisLeft(y));
 
   g2.append("text")
-    .attr("x", width / 2).attr("y", -20).attr("t
+    .attr("x", width / 2).attr("y", -20).attr("text-anchor", "middle")
+    .text(`Lap Time vs. Lap for ${circuitName}`);
+
+  g2.append("text")
+    .attr("x", width / 2).attr("y", height + 40).attr("text-anchor", "middle")
+    .text("Lap");
+
+  g2.append("text")
+    .attr("x", -height / 2).attr("y", -50)
+    .attr("transform", "rotate(-90)").attr("text-anchor", "middle")
+    .text("Lap Time");
+
+  const line = d3.line().x(d => x(d.lap)).y(d => y(d.time_ms));
+
+  g2.append("path")
+    .datum(driverLaps)
+    .attr("fill", "none").attr("stroke", driverColors[driverName])
+    .attr("stroke-width", 2).attr("d", line);
+
+  g2.selectAll(".dot")
+    .data(driverLaps).enter()
+    .append("circle")
+    .attr("cx", d => x(d.lap)).attr("cy", d => y(d.time_ms))
+    .attr("r", 4).attr("fill", driverColors[driverName]);
+
+  if (driverName !== "Max Verstappen") {
+    g2.append("path")
+      .datum(refLaps)
+      .attr("fill", "none").attr("stroke", "#003773")
+      .attr("stroke-dasharray", "4 2")
+      .attr("stroke-width", 2)
+      .attr("d", line);
+
+    g2.selectAll(".ref-dot")
+      .data(refLaps).enter()
+      .append("circle")
+      .attr("cx", d => x(d.lap)).attr("cy", d => y(d.time_ms))
+      .attr("r", 4).attr("fill", "#003773");
+  }
+}
