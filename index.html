@@ -2,30 +2,24 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>F1 Fastest Laps</title>
+  <title>F1 Lap Times Visualization</title>
+  <link rel="stylesheet" href="styles.css">
   <script src="https://d3js.org/d3.v7.min.js"></script>
   <script src="https://unpkg.com/d3-annotation@2.5.1/dist/d3-annotation.min.js"></script>
-  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <h1 id="primary-title">Fastest Lap Time vs. Circuit</h1>
+  <label for="driver-select">Select Driver:</label>
+  <select id="driver-select">
+    <option value="Max Verstappen">Max Verstappen</option>
+    <option value="Sergio Pérez">Sergio Pérez</option>
+    <option value="Lewis Hamilton">Lewis Hamilton</option>
+    <option value="Fernando Alonso">Fernando Alonso</option>
+  </select>
 
-  <div>
-    <label for="driver-select">Select Driver:</label>
-    <select id="driver-select">
-      <option value="Max Verstappen">Max Verstappen</option>
-      <option value="Sergio Pérez">Sergio Pérez</option>
-      <option value="Lewis Hamilton">Lewis Hamilton</option>
-      <option value="Fernando Alonso">Fernando Alonso</option>
-    </select>
-  </div>
-
-  <svg id="circuit-plot" width="800" height="500"></svg>
-
-  <div id="lap-plot-container" class="hidden">
-    <h2 id="lap-title">Lap Time vs. Lap</h2>
-    <svg id="lap-plot" width="800" height="500"></svg>
+  <div id="chart">
+    <svg id="circuit-plot"></svg>
+    <svg id="lap-plot" class="hidden"></svg>
   </div>
 
   <script src="main.js"></script>
