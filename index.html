@@ -1,41 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>F1 Lap Time Analysis</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F1 Fastest Laps</title>
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <style>
-    body { font-family: sans-serif; padding: 20px; }
-    svg { border: 1px solid #ccc; margin-bottom: 20px; }
-    .hidden { display: none; }
-    .rotate-label text {
-      transform: rotate(-45deg);
-      text-anchor: end;
-    }
-    .legend {
-      font-size: 14px;
-    }
-  </style>
+  <script src="https://unpkg.com/d3-annotation@2.5.1/dist/d3-annotation.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1 id="main-title">F1 Lap Times</h1>
+  <h1 id="primary-title">Fastest Lap Time vs. Circuit</h1>
 
-  <label for="driver-select">Choose a Driver: </label>
-  <select id="driver-select">
-    <option value="Max Verstappen">Max Verstappen</option>
-    <option value="Sergio Pérez">Sergio Pérez</option>
-    <option value="Lewis Hamilton">Lewis Hamilton</option>
-    <option value="Fernando Alonso">Fernando Alonso</option>
-  </select>
+  <div>
+    <label for="driver-select">Select Driver:</label>
+    <select id="driver-select">
+      <option value="Max Verstappen">Max Verstappen</option>
+      <option value="Sergio Pérez">Sergio Pérez</option>
+      <option value="Lewis Hamilton">Lewis Hamilton</option>
+      <option value="Fernando Alonso">Fernando Alonso</option>
+    </select>
+  </div>
 
-  <h2 id="primary-title"></h2>
-  <svg id="circuit-plot" width="800" height="450"></svg>
+  <svg id="circuit-plot" width="800" height="500"></svg>
 
   <div id="lap-plot-container" class="hidden">
     <h2 id="lap-title">Lap Time vs. Lap</h2>
-    <svg id="lap-plot" width="800" height="450"></svg>
+    <svg id="lap-plot" width="800" height="500"></svg>
   </div>
 
-  <script src="js/main.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
